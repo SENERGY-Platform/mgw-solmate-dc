@@ -1,0 +1,7 @@
+git+https://github.com/SENERGY-Platform/simple-env-var-manager.git@15ff7dd5effdd91b6a3bfd59b9e9a3b19b63f925
+git+https://github.com/SENERGY-Platform/mgw-dc-lib.git@973b4895c81de07ee18749fafe1d18c9d3082bba
+paho-mqtt>=1.4.0,<1.6
+pycryptodome<4.0.0
+schedule==1.1.0
+websocket-client==1.4.1
+requests
