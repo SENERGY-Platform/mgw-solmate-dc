@@ -36,8 +36,10 @@ class Discovery(threading.Thread):
         logger.info("Starting scan")
         devices: Dict[str, Solmate] = {}
         known_ips = []
-        for k, d in self._device_manager.get_devices():
-            known_ips = known_ips.append(d.ip)
+        known = self._device_manager.get_devices()
+        for k in known:
+            d = known[k]
+            known_ips.append(d.ip)
             devices[k] = d
 
         for ip in conf.Discovery.ips.split(","):
@@ -71,11 +73,6 @@ class Discovery(threading.Thread):
                 for device_id in existing_devices:
                     self._device_manager.handle_existing_device(stored_devices[device_id])
             self._device_manager.set_devices(devices=solmates)
-
-
-
-            #self._device_manager.set_devices(devices=solmates)
-            #self._device_manager.publish_devices()
         except Exception as ex:
             logger.error("refreshing devices failed - {}".format(ex))
 
