@@ -38,7 +38,7 @@ class Command:
         if not is_event:
             payload = json.loads(payload)
             command_id = payload["command_id"]
-            if len(payload["data"]) == 0:
+            if "data" not in payload or len(payload["data"]) == 0:
                 payload = {}
             else:
                 payload = json.loads(payload["data"])

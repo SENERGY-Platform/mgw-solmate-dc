@@ -53,11 +53,28 @@ class Solmate(mgw_dc.dm.Device, Thread):
 
     def _on_message(self, ws, message):
         logger.debug(f"{self.ip} Message {message}")
-        msg = json.loads(message)
+        try:
+            msg = json.loads(message)
+        except json.decoder.JSONDecodeError:
+            logger.warning(f"{self.ip} Received malformed response from solmate {message}")
+            return
+        if "id" not in msg:
+            logger.warning(f"{self.ip} Received malformed response from solmate {message}")
+            return
         msg_id = msg["id"]
+        if msg_id not in self._callbacks:
+            logger.warning(f"{self.ip} Received response, but no callback registered for id {msg_id}")
+            return
         cb = self._callbacks[msg_id]
         if cb is not None:
-            cb(msg_id, msg["data"])
+            if "data" in msg:
+                data = msg["data"]
+            else:
+                data = None
+            try:
+                cb(msg_id, data)
+            except Exception as error:
+                logger.error(f"{self.ip} Error in callback: {error}")
         del (self._callbacks[msg_id])
 
     def _on_error(self, ws, error):
