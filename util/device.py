@@ -32,7 +32,8 @@ logger = get_logger(__name__.split(".", 1)[-1])
 
 
 class Solmate(mgw_dc.dm.Device, Thread):
-    def __init__(self, ip: str):
+    def __init__(self, ip: str, callback: typing.Callable[[any], None]):
+        self._cb = callback
         self._auth = False
         self._credentials = None
         self._ws: typing.Optional[websocket.WebSocketApp] = None
@@ -83,11 +84,14 @@ class Solmate(mgw_dc.dm.Device, Thread):
         logger.error(f"{self.ip} Error {error}")
         mgw_dc.dm.Device.state = device_state.offline
         self._authenticated = False
+        self._cb(self)
 
     def _on_close(self, ws, close_status_code, close_msg):
         logger.warning(f"{self.ip} Closed connection {close_status_code} {close_msg}")
-        mgw_dc.dm.Device.state = device_state.offline
-        self._authenticated = False
+        if mgw_dc.dm.device_state != device_state.offline or self._authenticated:
+            mgw_dc.dm.Device.state = device_state.offline
+            self._authenticated = False
+            self._cb(self)
         logger.info(f"{self.ip} Retry in {self._backoff}s")
         time.sleep(self._backoff)
         self._backoff = min(self._backoff + 1, 60)
@@ -99,6 +103,7 @@ class Solmate(mgw_dc.dm.Device, Thread):
         self._id = 0
         self._send_message("authenticate", self._credentials, None)
         self._authenticated = True
+        self._cb(self)
 
     def send_message(self, route: str, data, callback: typing.Optional[typing.Callable]) -> int:
         if self._ws is None or not self._authenticated:

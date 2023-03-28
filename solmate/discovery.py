@@ -46,7 +46,7 @@ class Discovery(threading.Thread):
             if ip in known_ips:
                 continue  # DONT RECREATE
             try:
-                solmate = Solmate(ip)
+                solmate = Solmate(ip, self._device_manager.handle_existing_device)
                 logger.info("Discovered '" + ip)
                 solmate.start()
                 devices[solmate.id] = solmate
