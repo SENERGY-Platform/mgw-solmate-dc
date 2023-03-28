@@ -14,6 +14,7 @@
    limitations under the License.
 """
 import json
+import time
 import typing
 from threading import Thread
 
@@ -43,6 +44,7 @@ class Solmate(mgw_dc.dm.Device, Thread):
                                          timeout=10).json()
         self._credentials["serial_num"] = self._credentials["serial-number"]
         self._credentials["device_id"] = "local_webinterface"
+        self._backoff = 0
         del (self._credentials["serial-number"])
         id = conf.Discovery.device_id_prefix + self._credentials["serial_num"]
         name = f'Solmate {self._credentials["serial_num"]}'
@@ -86,10 +88,14 @@ class Solmate(mgw_dc.dm.Device, Thread):
         logger.warning(f"{self.ip} Closed connection {close_status_code} {close_msg}")
         mgw_dc.dm.Device.state = device_state.offline
         self._authenticated = False
+        logger.info(f"{self.ip} Retry in {self._backoff}s")
+        time.sleep(self._backoff)
+        self._backoff = min(self._backoff + 1, 60)
 
     def _on_open(self, ws):
         logger.info(f"{self.ip} Opened connection")
         mgw_dc.dm.Device.state = device_state.online
+        self._backoff = 0
         self._id = 0
         self._send_message("authenticate", self._credentials, None)
         self._authenticated = True
