@@ -1,0 +1,53 @@
+modfileVersion: "v1"
+id: github.com/SENERGY-Platform/mgw-solmate-dc/module
+name: Solmate Device-Connector
+version: v0.0.1
+type: device-connector
+deploymentType: single
+license: "Apache License 2.0"
+dependencies:
+  github.com/SENERGY-Platform/mgw-mqtt-broker:
+    version: <v2.0.0
+    requiredServices:
+      broker:
+        - refVar: CONF_MSGBROKER_HOST
+          services:
+            - mgw-solmate-dc
+services:
+  mgw-mqtt-dc:
+    name: mgw-solmate-dc
+    image: ghcr.io/senergy-platform/mgw-solmate-dc:v0.0.1
+configs:
+  discoveryIps:
+    dataType: string
+    value: ""
+    targets:
+      - refVar: SOLMATE_DISCOVERY_IPS
+        services:
+          - mgw-solmate-dc
+    userInput:
+      type: text
+      name: Discovery IPs
+      description: "comma separated list of IPs, e.g. 192.168.0.1,192.168.0.2"
+  liveSeconds:
+    dataType: int
+    value: 5
+    targets:
+      - refVar: SOLMATE_EVENTS_LIVE_VALUES_SECONDS
+        services:
+          - mgw-solmate-dc
+    userInput:
+      type: number
+      name: Live Data Poll Rate
+      description: "refresh live data every x seconds"
+  injectionSeconds:
+    dataType: int
+    value: 15
+    targets:
+      - refVar: SOLMATE_EVENTS_INJECTION_SETTINGS_SECONDS
+        services:
+          - mgw-solmate-dc
+    userInput:
+      type: number
+      name: Injection Data Poll Rate
+      description: "refresh injection data every x seconds"
