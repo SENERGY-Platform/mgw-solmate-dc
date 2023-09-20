@@ -1,7 +1,7 @@
 modfileVersion: "v1"
-id: github.com/SENERGY-Platform/mgw-solmate-dc/module
+id: github.com/SENERGY-Platform/mgw-solmate-dc/module/v0.0.2
 name: Solmate Device-Connector
-version: v0.0.1
+version: v0.0.2
 type: device-connector
 deploymentType: single
 license: "Apache License 2.0"
@@ -16,7 +16,7 @@ dependencies:
 services:
   mgw-mqtt-dc:
     name: mgw-solmate-dc
-    image: ghcr.io/senergy-platform/mgw-solmate-dc:v0.0.1
+    image: ghcr.io/senergy-platform/mgw-solmate-dc:v0.0.2
 configs:
   discoveryIps:
     dataType: string
