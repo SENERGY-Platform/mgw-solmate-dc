@@ -1,7 +1,7 @@
 modfileVersion: "v1"
 id: github.com/SENERGY-Platform/mgw-solmate-dc/module
 name: Solmate Device-Connector
-version: v0.0.8
+version: v0.0.9
 type: device-connector
 deploymentType: single
 license: "Apache License 2.0"
@@ -16,24 +16,24 @@ dependencies:
 services:
   mgw-solmate-dc:
     name: mgw-solmate-dc
-    image: ghcr.io/senergy-platform/mgw-solmate-dc:v0.0.8
+    image: ghcr.io/senergy-platform/mgw-solmate-dc:v0.0.9
 configs:
   discoveryIps:
     dataType: string
-    value: ""
+    isList: true
     targets:
-      - refVar: SOLMATE_DISCOVERY_IPS
+      - refVar: CONF_DISCOVERY_IPS
         services:
           - mgw-solmate-dc
     userInput:
       type: text
       name: Discovery IPs
-      description: "comma separated list of IPs, e.g. 192.168.0.1,192.168.0.2"
+      description: "List of IPs, e.g. 192.168.0.1, 192.168.0.2"
   liveSeconds:
     dataType: int
     value: 5
     targets:
-      - refVar: SOLMATE_EVENTS_LIVE_VALUES_SECONDS
+      - refVar: CONF_SENERGY_EVENTS_LIVE_VALUES_SECONDS
         services:
           - mgw-solmate-dc
     userInput:
@@ -44,7 +44,7 @@ configs:
     dataType: int
     value: 15
     targets:
-      - refVar: SOLMATE_EVENTS_INJECTION_SETTINGS_SECONDS
+      - refVar: CONF_SENERGY_EVENTS_INJECTION_SETTINGS_SECONDS
         services:
           - mgw-solmate-dc
     userInput:
