@@ -24,7 +24,7 @@ class Conf:
     @simple_env_var.section
     class MsgBroker:
         host = "localhost"
-        port = 1883
+        port = 1881
 
     @simple_env_var.section
     class Logger:
