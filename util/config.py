@@ -41,7 +41,7 @@ class Conf:
     class Discovery:
         scan_delay = 5 * 60
         device_id_prefix = "solmate-"
-        ips = "localhost, 127.0.0.1"
+        ips = "localhost,127.0.0.1"
         http_port = 80
         ws_port = 9124
 
@@ -56,6 +56,7 @@ class Conf:
         dt_solmate = "urn:infai:ses:device-type:11fdc793-4b60-40e0-a3fd-e05d1bf5b779"
         events_live_values_seconds = 1
         service_live_values = "live_values"
+        live_values_cap = 1000
         events_injection_settings_seconds = 10
         service_injection_settings = "get_injection_settings"
 

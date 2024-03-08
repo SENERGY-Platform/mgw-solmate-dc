@@ -1,7 +1,7 @@
 modfileVersion: "v1"
 id: github.com/SENERGY-Platform/mgw-solmate-dc/module
 name: Solmate Device-Connector
-version: v0.0.10
+version: v0.0.11
 type: device-connector
 deploymentType: single
 license: "Apache License 2.0"
@@ -16,7 +16,7 @@ dependencies:
 services:
   mgw-solmate-dc:
     name: mgw-solmate-dc
-    image: ghcr.io/senergy-platform/mgw-solmate-dc:v0.0.10
+    image: ghcr.io/senergy-platform/mgw-solmate-dc:v0.0.11
 configs:
   discoveryIps:
     dataType: string
@@ -40,6 +40,17 @@ configs:
       type: number
       name: Live Data Poll Rate
       description: "refresh live data every x seconds"
+    liveEnergyCap:
+      dataType: int
+      value: 1000
+      targets:
+        - refVar: CONF_SENERGY_LIVE_VALUES_CAP
+          services:
+            - mgw-solmate-dc
+      userInput:
+        type: number
+        name: Live Data Energy Cap
+        description: "ignore pv power values above this value"
   injectionSeconds:
     dataType: int
     value: 15

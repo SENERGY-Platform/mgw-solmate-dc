@@ -19,7 +19,7 @@ import typing
 
 import mgw_dc
 
-from util import get_logger, MQTTClient
+from util import get_logger, MQTTClient, conf
 from util.device_manager import DeviceManager
 
 logger = get_logger(__name__.split(".", 1)[-1])
@@ -64,6 +64,9 @@ class Command:
         service, is_event, device_id, command_id = self._cb_info[id]
         del (self._cb_info[id])
         if is_event:
+            if service == conf.Senergy.service_live_values and 'pv_power' in result and result['pv_power'] >= conf.Senergy.live_values_cap:
+                logger.warn(f"Ignoring message since value is above cap (capped at {conf.Senergy.live_values_cap}): { result['pv_power']}")
+                return
             response = result
             topic = mgw_dc.com.gen_event_topic(device_id, service)
         else:
